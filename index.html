@@ -4,96 +4,105 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Raid Unique Drop & Live Profit Calculator</title>
-    <script src="https://tailwindcss.com"></script>
+    <style>
+        body { background-color: #111827; color: #f3f4f6; font-family: system-ui, -apple-system, sans-serif; padding: 24px; margin: 0; }
+        .container { max-w: 896px; margin: 0 auto; }
+        header { border-b: 1px solid #374151; padding-bottom: 16px; margin-bottom: 24px; }
+        h1 { color: #34d399; font-size: 28px; font-weight: 700; margin: 0; }
+        .grid { display: grid; grid-template-columns: 1fr; gap: 24px; }
+        @media (min-width: 768px) { .grid { grid-template-columns: 1fr 2fr; } .inner-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 24px; } }
+        .card { background-color: #1f2937; padding: 24px; border-radius: 8px; box-shadow: 0 4px 6px -1px rgba(0,0,0,0.1); border: 1px solid #374151; }
+        .card-player { border: 1px solid #059669; }
+        .card-log { border: 1px solid #6366f1; margin-top: 24px; margin-bottom: 24px; }
+        label { display: block; font-size: 14px; font-weight: 500; margin-bottom: 8px; }
+        input[type="range"] { width: 100%; margin-bottom: 16px; accent-color: #10b981; }
+        .radio-group { margin-top: 12px; }
+        .radio-label { display: flex; align-items: center; margin-bottom: 8px; cursor: pointer; gap: 8px; }
+        .text-green { color: #34d399; font-weight: bold; }
+        .text-red { color: #f87171; font-weight: bold; }
+        .text-indigo { color: #818cf8; font-weight: bold; }
+        .text-val { font-size: 20px; font-weight: 700; color: #34d399; }
+        .progress-bg { width: 100%; background-color: #4b5563; h: 16px; border-radius: 9999px; margin-top: 8px; overflow: hidden; }
+        .progress-bar { background-color: #6366f1; height: 16px; border-radius: 9999px; transition: width 0.3s; width: 0%; }
+        table { width: 100%; border-collapse: collapse; text-align: left; font-size: 14px; color: #9ca3af; margin-top: 16px; }
+        th { background-color: #374151; color: #d1d5db; padding: 12px; font-size: 12px; text-transform: uppercase; }
+        td { padding: 12px; border-bottom: 1px solid #374151; color: #ffffff; }
+    </style>
 </head>
-<body class="bg-gray-900 text-gray-100 min-h-screen p-6">
-    <div class="max-w-4xl mx-auto space-y-6">
-        <header class="border-b border-gray-700 pb-4">
-            <h1 class="text-3xl font-bold text-green-400">Raid Unique Drop & Live Profit Calculator</h1>
-            <p class="text-gray-400 text-sm mt-1">Plug-and-play web calculator tracking point baselines, split strategies, and collection log completion milestones.</p>
+<body>
+    <div class="container border-layout">
+        <header>
+            <h1>Raid Unique Drop & Live Profit Calculator</h1>
+            <p style="color: #9ca3af; margin-top: 4px; font-size: 14px;">Plug-and-play web calculator tracking point baselines, split strategies, and collection log completion milestones.</p>
         </header>
-        <div class="grid grid-cols-1 md:grid-cols-3 gap-6">
-            <div class="bg-gray-800 p-6 rounded-lg shadow-lg space-y-6">
+        <div class="grid">
+            <div class="card">
                 <div>
-                    <label class="block text-sm font-medium mb-2">Group Size (n): <span id="team_size_val" class="text-green-400 font-bold">2</span></label>
-                    <input type="range" id="team_size" min="2" max="8" value="2" class="w-full h-2 bg-gray-700 rounded-lg appearance-none cursor-pointer accent-green-500">
+                    <label>Group Size (n): <span id="team_size_val" class="text-green">2</span></label>
+                    <input type="range" id="team_size" min="2" max="8" value="2">
                 </div>
                 <div>
-                    <label class="block text-sm font-medium mb-2">Completed Runs per Hour: <span id="runs_val" class="text-green-400 font-bold">4</span></label>
-                    <input type="range" id="runs_per_hour" min="1" max="10" value="4" step="0.5" class="w-full h-2 bg-gray-700 rounded-lg appearance-none cursor-pointer accent-green-500">
+                    <label>Completed Runs per Hour: <span id="runs_val" class="text-green">4</span></label>
+                    <input type="range" id="runs_per_hour" min="1" max="10" value="4" step="0.5">
                 </div>
                 <div>
-                    <label class="block text-sm font-medium mb-3">Loot Distribution:</label>
-                    <div class="space-y-2">
-                        <label class="flex items-center space-x-2 cursor-pointer">
-                            <input type="radio" name="split_type" value="ffa" checked class="w-4 h-4 text-green-500 bg-gray-700 border-gray-600 focus:ring-green-500">
-                            <span>FFA (Keep your own drops)</span>
-                        </label>
-                        <label class="flex items-center space-x-2 cursor-pointer">
-                            <input type="radio" name="split_type" value="split" class="w-4 h-4 text-green-500 bg-gray-700 border-gray-600 focus:ring-green-500">
-                            <span>Split Loot (Equal team division)</span>
-                        </label>
+                    <label style="font-weight: bold; margin-bottom: 12px;">Loot Distribution:</label>
+                    <div class="radio-group">
+                        <label class="radio-label"><input type="radio" name="split_type" value="ffa" checked> <span>FFA (Keep your own drops)</span></label>
+                        <label class="radio-label"><input type="radio" name="split_type" value="split")> <span>Split Loot (Equal team division)</span></label>
                     </div>
                 </div>
-                <div class="border-t border-gray-700 pt-4 space-y-4">
-                    <h4 class="font-bold text-gray-300">Death Configuration</h4>
+                <div style="border-top: 1px solid #374151; margin-top: 16px; padding-top: 16px;">
+                    <h4 style="margin: 0 0 12px 0; color: #d1d5db;">Death Configuration</h4>
                     <div>
-                        <label class="block text-sm font-medium mb-2">Your Deaths (Max 5): <span id="my_deaths_val" class="text-red-400 font-bold">0</span></label>
-                        <input type="range" id="my_deaths" min="0" max="5" value="0" class="w-full h-2 bg-gray-700 rounded-lg appearance-none cursor-pointer accent-red-500">
+                        <label>Your Deaths (Max 5): <span id="my_deaths_val" class="text-red">0</span></label>
+                        <input type="range" id="my_deaths" min="0" max="5" value="0" style="accent-color: #ef4444;">
                     </div>
                     <div>
-                        <label class="block text-sm font-medium mb-2">Total Teammate Deaths: <span id="tm_deaths_val" class="text-red-400 font-bold">0</span></label>
-                        <input type="range" id="total_teammate_deaths" min="0" max="5" value="0" class="w-full h-2 bg-gray-700 rounded-lg appearance-none cursor-pointer accent-red-500">
+                        <label>Total Teammate Deaths: <span id="tm_deaths_val" class="text-red">0</span></label>
+                        <input type="range" id="total_teammate_deaths" min="0" max="5" value="0" style="accent-color: #ef4444;">
                     </div>
                 </div>
             </div>
-            <div class="md:col-span-2 space-y-6">
-                <div class="grid grid-cols-1 sm:grid-cols-2 gap-6">
-                    <div class="bg-gray-800 p-6 rounded-lg shadow-lg border border-gray-700">
-                        <h4 class="text-lg font-bold text-gray-300 mb-3 border-b border-gray-700 pb-1">Team Performance</h4>
-                        <div class="space-y-2 text-sm">
-                            <p>Team Drop Chance: <span id="team_pct" class="font-bold text-white">0%</span> (<span id="team_odds" class="text-gray-400">1 in 0</span>)</p>
-                            <p>Expected Team Profit / Hour: <span id="team_gp" class="font-bold text-green-400">0 gp</span></p>
-                        </div>
+            <div class="output-wrapper">
+                <div class="inner-grid">
+                    <div class="card" style="margin-bottom: 20px;">
+                        <h4 style="margin: 0 0 12px 0; padding-bottom: 4px; border-bottom: 1px solid #374151; color: #d1d5db;">Team Performance</h4>
+                        <p>Team Drop Chance: <span id="team_pct" style="font-weight: bold; color: white;">0%</span> (<span id="team_odds" style="color: #9ca3af;">1 in 0</span>)</p>
+                        <p>Expected Team Profit / Hour: <span id="team_gp" class="text-green">0 gp</span></p>
                     </div>
-                    <div class="bg-gray-800 p-6 rounded-lg shadow-lg border border-green-600">
-                        <h4 class="text-lg font-bold text-green-400 mb-3 border-b border-gray-700 pb-1">Your Performance</h4>
-                        <div class="space-y-2 text-sm">
-                            <p>Your Point Share: <span id="my_share" class="font-bold text-white">0%</span></p>
-                            <p>Your Personal Drop Chance: <span id="my_pct" class="font-bold text-white">0%</span> (<span id="my_odds" class="text-gray-400">1 in 0</span>)</p>
-                            <p id="profit_label" class="font-semibold text-gray-300">Expected Your Profit / Hr (Keep Own Drop):</p>
-                            <p class="text-xl font-bold text-green-400"><span id="id_my_gp">0</span> gp</p>
-                        </div>
+                    <div class="card card-player" style="margin-bottom: 20px;">
+                        <h4 style="margin: 0 0 12px 0; padding-bottom: 4px; border-bottom: 1px solid #374151; color: #34d399;">Your Performance</h4>
+                        <p>Your Point Share: <span id="my_share" style="font-weight: bold; color: white;">0%</span></p>
+                        <p>Your Personal Drop Chance: <span id="my_pct" style="font-bold: bold; color: white;">0%</span> (<span id="my_odds" style="color: #9ca3af;">1 in 0</span>)</p>
+                        <p id="profit_label" style="margin: 12px 0 4px 0; color: #d1d5db;">Expected Your Profit / Hr (Keep Own Drop):</p>
+                        <p class="text-val"><span id="id_my_gp">0</span> gp</p>
                     </div>
                 </div>
-                <div class="bg-gray-800 p-6 rounded-lg shadow-lg border border-indigo-500">
-                    <h4 class="text-lg font-bold text-indigo-400 mb-3 border-b border-gray-700 pb-1">Collection Log Completion Analytics</h4>
-                    <div class="space-y-2 text-sm">
-                        <p>Expected Personal Unique Drops in 2,000 Runs: <span id="expected_uniques" class="font-bold text-white">0.00</span></p>
-                        <p>Probability to get <span class="text-indigo-300 font-semibold">at least one of each item</span> before 2,000 clears:</p>
-                        <div class="w-full bg-gray-700 rounded-full h-4 mt-2 mb-1">
-                            <div id="prob_progress" class="bg-indigo-500 h-4 rounded-full transition-all duration-300" style="width: 0%"></div>
-                        </div>
-                        <p class="text-xl font-bold text-indigo-400 text-right"><span id="set_complete_prob">0.00</span>%</p>
-                    </div>
+                <div class="card card-log">
+                    <h4 style="margin: 0 0 12px 0; padding-bottom: 4px; border-bottom: 1px solid #374151; color: #818cf8;">Collection Log Completion Analytics</h4>
+                    <p>Expected Personal Unique Drops in 2,000 Runs: <span id="expected_uniques" style="font-weight: bold; color: white;">0.00</span></p>
+                    <p style="margin-top: 8px;">Probability to get <span style="color: #a5b4fc; font-weight: 600;">at least one of each item</span> before 2,000 clears:</p>
+                    <div class="progress-bg"><div id="prob_progress" class="progress-bar"></div></div>
+                    <p style="font-size: 20px; font-weight: 700; color: #818cf8; text-align: right; margin: 8px 0 0 0;"><span id="set_complete_prob">0.00</span>%</p>
                 </div>
-                <div class="bg-gray-800 p-6 rounded-lg shadow-lg border border-gray-700">
-                    <h4 class="text-lg font-bold text-gray-300 mb-4">Active Unique Loot Values</h4>
-                    <div class="overflow-x-auto">
-                        <table class="w-full text-left text-sm text-gray-400">
-                            <thead class="text-xs uppercase bg-gray-700 text-gray-300">
+                <div class="card">
+                    <h4 style="margin: 0 0 12px 0; color: #d1d5db;">Active Unique Loot Values</h4>
+                    <div style="overflow-x: auto;">
+                        <table>
+                            <thead>
                                 <tr>
-                                    <th class="py-3 px-4">Item</th>
-                                    <th class="py-3 px-4 text-right">Market Price (gp)</th>
-                                    <th class="py-3 px-4 text-center">Weight</th>
+                                    <th>Item</th>
+                                    <th style="text-align: right;">Market Price (gp)</th>
+                                    <th style="text-align: center;">Weight</th>
                                 </tr>
                             </thead>
-                            <tbody class="divide-y divide-gray-700">
-                                <tr><td class="py-3 px-4 text-white font-medium">Obligator weighting</td><td class="py-3 px-4 text-right">2,771,692,041</td><td class="py-3 px-4 text-center">1</td></tr>
-                                <tr><td class="py-3 px-4 text-white font-medium">Horn of Bran weighting</td><td class="py-3 px-4 text-right">362,987,231</td><td class="py-3 px-4 text-center">3</td></tr>
-                                <tr><td class="py-3 px-4 text-white font-medium">Ascension Crossbows weighting</td><td class="py-3 px-4 text-right">273,000,000</td><td class="py-3 px-4 text-center">2</td></tr>
-                                <tr><td class="py-3 px-4 text-white font-medium">Zorya's Tome weighting</td><td class="py-3 px-4 text-right">33,379,342</td><td class="py-3 px-4 text-center">4</td></tr>
-                                <tr><td class="py-3 px-4 text-white font-medium">Rondache weighting</td><td class="py-3 px-4 text-right">19,163,145</td><td class="py-3 px-4 text-center">5</td></tr>
+                            <tbody>
+                                <tr><td style="font-weight: 500;">Obligator weighting</td><td style="text-align: right;">2,771,692,041</td><td style="text-align: center;">1</td></tr>
+                                <tr><td style="font-weight: 500;">Horn of Bran weighting</td><td style="text-align: right;">362,987,231</td><td style="text-align: center;">3</td></tr>
+                                <tr><td style="font-weight: 500;">Ascension Crossbows weighting</td><td style="text-align: right;">273,000,000</td><td style="text-align: center;">2</td></tr>
+                                <tr><td style="font-weight: 500;">Zorya's Tome weighting</td><td style="text-align: right;">33,379,342</td><td style="text-align: center;">4</td></tr>
+                                <tr><td style="font-weight: 500;">Rondache weighting</td><td style="text-align: right;">19,163,145</td><td style="text-align: center;">5</td></tr>
                             </tbody>
                         </table>
                     </div>
@@ -143,7 +152,7 @@
             document.getElementById('team_size_val').innerText = teamSize;
             document.getElementById('runs_val').innerText = runsPerHour;
             document.getElementById('my_deaths_val').innerText = myDeaths;
-            document.getElementById('tm_deaths_val').innerText = teammateDeaths + " (Max " + maxTmDeaths + ")";
+            document.getElementById('tm_deaths_val').innerText = teammateDeaths;
             const perfectTeamTotal = 700;
             const groupMultiplier = 1 + (0.04 * (teamSize - 2));
             const expectedIndividualContrib = perfectTeamTotal / teamSize;
